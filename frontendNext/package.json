@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev-noauth": "NEXT_PUBLIC_DISABLE_AUTH=true next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
