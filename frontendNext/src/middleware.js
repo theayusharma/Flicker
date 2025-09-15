@@ -9,7 +9,6 @@ export default withAuth(
     callbacks: {
       authorized: ({ token, req }) => {
         if (req.nextUrl.pathname.startsWith('/dashboard') || 
-            req.nextUrl.pathname.startsWith('/events') ||
             req.nextUrl.pathname.startsWith('/profile')) {
           return !!token;
         }
@@ -22,7 +21,6 @@ export default withAuth(
 export const config = {
   matcher: [
     '/dashboard/:path*',
-    '/events/:path*', 
     '/profile/:path*',
     '/settings/:path*'
   ]

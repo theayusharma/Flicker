@@ -19,26 +19,12 @@ func main() {
 	// 	url = "http://localhost:3000"
 	// }
 
-	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
-	if allowedOrigins == "" {
-		allowedOrigins = url
-	}
-
-	allowedHeaders := os.Getenv("ALLOWED_HEADERS")
-	if allowedHeaders == "" {
-		allowedHeaders = "Origin,Content-Type,Accept"
-	}
-
-	allowedMethods := os.Getenv("ALLOWED_METHODS")
-	if allowedMethods == "" {
-		allowedMethods = "GET,POST,PUT,DELETE,PATCH"
-	}
-
-	// Configure CORS
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: allowedOrigins,
-		AllowHeaders: allowedHeaders,
-		AllowMethods: allowedMethods,
+		AllowOrigins:  url, // frontend origin
+		AllowMethods:  "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:  "Origin, Content-Type, Accept, Authorization",
+		ExposeHeaders: "Content-Length",
+		// AllowCredentials: true,
 	}))
 
 	app.Get("/", func(c *fiber.Ctx) error {
