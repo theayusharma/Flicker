@@ -11,8 +11,8 @@ type Team struct {
 	UpdatedAt            time.Time
 	DeletedAt            gorm.DeletedAt `gorm:"index"`
 	TeamName             string         `gorm:"not null"`
-	ProductOwnerUserID   *uint          `gorm:"index"` // Non-referential, no foreign key
-	ProjectManagerUserID *uint          `gorm:"index"` // Non-referential, no foreign key
+	ProductOwnerUserID   *uint          `gorm:"index"`
+	ProjectManagerUserID *uint          `gorm:"index"` // Non-referentia
 
 	Users        []User        `gorm:"foreignKey:TeamID"`
 	ProjectTeams []ProjectTeam `gorm:"foreignKey:TeamID"`
