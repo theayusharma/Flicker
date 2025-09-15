@@ -36,7 +36,6 @@ func main() {
 	routes.Users(app)
 	routes.Teams(app)
 
-	database.InitDB()
 	db := database.GetDB()
 	routes.SetupAuthRoutes(app, db)
 
