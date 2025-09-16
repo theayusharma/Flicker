@@ -2,8 +2,11 @@ package handler
 
 import (
 	"fmt"
+	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
 
 	"backendGo/internal/models"
@@ -73,8 +76,30 @@ func (h *AuthHandler) GoogleAuth(c *fiber.Ctx) error {
 		Username: user.Username,
 		Email:    *user.Email,
 		Role:     "user",
-		Token:    fmt.Sprintf("%d", user.UserID), // Simple token using user ID
+		Token:    generateJWTToken(user.UserID),
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)
+}
+
+func generateJWTToken(userID uint) string {
+	claims := jwt.MapClaims{
+		"user_id": userID,
+		"exp":     time.Now().Add(time.Hour * 24 * 7).Unix(), // 7 days
+		"iat":     time.Now().Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		jwtSecret = "fallback-secret-key"
+	}
+
+	tokenString, err := token.SignedString([]byte(jwtSecret))
+	if err != nil {
+		return fmt.Sprintf("%d", userID)
+	}
+
+	return tokenString
 }
