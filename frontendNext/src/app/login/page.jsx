@@ -1,44 +1,45 @@
 "use client";
-import { signIn, getSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkSession = async () => {
-      const session = await getSession();
-      if (session) {
-        router.push('/');
-      }
-    };
-    checkSession();
-  }, [router]);
+    if (status === 'authenticated' && session?.user?.backendToken) {
+      localStorage.setItem('userToken', session.user.backendToken);
+      router.push('/');
+    }
+  }, [session, status, router]);
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
       const result = await signIn('google', {
-        callbackUrl: '/',
-        redirect: false
+        redirect: false,
+        callbackUrl: '/'
       });
 
       if (result?.error) {
-        console.error('Sign in error:', result.error);
         alert('Authentication failed. Please try again.');
-      } else if (result?.url) {
-        router.push(result.url);
       }
     } catch (error) {
-      console.error('Error during sign in:', error);
       alert('An error occurred during sign in.');
     } finally {
       setLoading(false);
     }
   };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'authenticated') {
+    return <div>Redirecting...</div>;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-zinc-800 dark:to-gray-800">

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -71,21 +70,28 @@ func (h *AuthHandler) GoogleAuth(c *fiber.Ctx) error {
 		h.DB.Save(&user)
 	}
 
+	token, err := h.generateJWTToken(user.UserID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Token generation failed",
+		})
+	}
+
 	response := AuthResponse{
 		ID:       user.UserID,
 		Username: user.Username,
 		Email:    *user.Email,
 		Role:     "user",
-		Token:    generateJWTToken(user.UserID),
+		Token:    token,
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)
 }
 
-func generateJWTToken(userID uint) string {
+func (h *AuthHandler) generateJWTToken(userID uint) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
-		"exp":     time.Now().Add(time.Hour * 24 * 7).Unix(), // 7 days
+		"exp":     time.Now().Add(time.Hour * 24 * 7).Unix(),
 		"iat":     time.Now().Unix(),
 	}
 
@@ -98,8 +104,8 @@ func generateJWTToken(userID uint) string {
 
 	tokenString, err := token.SignedString([]byte(jwtSecret))
 	if err != nil {
-		return fmt.Sprintf("%d", userID)
+		return "", err
 	}
 
-	return tokenString
+	return tokenString, nil
 }

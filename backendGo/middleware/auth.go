@@ -83,7 +83,6 @@ func (m *AuthMiddleware) RequireAuth(c *fiber.Ctx) error {
 
 func (m *AuthMiddleware) parseJWTToken(tokenString string) (uint, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid signing method")
 		}
@@ -96,11 +95,14 @@ func (m *AuthMiddleware) parseJWTToken(tokenString string) (uint, error) {
 		return []byte(jwtSecret), nil
 	})
 
-	if err != nil || !token.Valid {
+	if err != nil {
 		return 0, err
 	}
 
-	// Extract user ID from JWT claims
+	if !token.Valid {
+		return 0, fiber.NewError(fiber.StatusUnauthorized, "Invalid token")
+	}
+
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
 		if userIDFloat, exists := claims["user_id"]; exists {
 			if userIDValue, ok := userIDFloat.(float64); ok {

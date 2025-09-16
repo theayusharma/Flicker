@@ -85,21 +85,29 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ 
     baseUrl: process.env.NEXT_PUBLIC_BACK_URL,
     prepareHeaders: (headers, { getState }) => {
-
       const isAuthDisabled = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
       
       if (isAuthDisabled) {
         const devUserId = process.env.NEXT_PUBLIC_DEV_USER_ID || '1';
         headers.set('authorization', `Bearer ${devUserId}`);
       } else {
-
+        let userToken = null;
+        
         if (typeof window !== 'undefined') {
-          const userToken = localStorage.getItem('userToken');
-          if (userToken) {
-            headers.set('authorization', `Bearer ${userToken}`);
-          }
+          userToken = localStorage.getItem('userToken');
+        }
+        
+        if (!userToken) {
+          const state = getState() as any;
+          userToken = state.auth?.userToken;
+        }
+        
+        if (userToken) {
+          headers.set('authorization', `Bearer ${userToken}`);
         }
       }
+      
+      headers.set('Content-Type', 'application/json');
       return headers;
     },
   }),

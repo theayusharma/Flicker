@@ -11,7 +11,6 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Send user data to your Go backend for registration/login
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/auth/google`, {
           method: 'POST',
@@ -26,44 +25,35 @@ export const authOptions = {
           }),
         });
 
-        if (response.ok) {
-          const userData = await response.json();
-          // Store additional user data in the session
-          user.backendId = userData.id;
-          user.role = userData.role;
-          user.token = userData.token;
-          
-          // Store token in localStorage for API calls
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('userToken', userData.token);
-          }
-          
-          return true;
+        if (!response.ok) {
+          return false;
         }
-        return false;
+
+        const userData = await response.json();
+        user.backendId = userData.id;
+        user.backendToken = userData.token;
+        user.role = userData.role;
+
+        return true;
       } catch (error) {
-        console.error('Error during sign in:', error);
         return false;
       }
     },
-    async jwt({ token, user, account }) {
-      // Persist user data to token
+    async jwt({ token, user }) {
       if (user) {
         token.backendId = user.backendId;
+        token.backendToken = user.backendToken;
         token.role = user.role;
-        token.userToken = user.token;
       }
       return token;
     },
     async session({ session, token }) {
-      // Send properties to the client
       session.user.backendId = token.backendId;
+      session.user.backendToken = token.backendToken;
       session.user.role = token.role;
-      session.user.userToken = token.userToken;
       
-      // Ensure token is available in localStorage
-      if (typeof window !== 'undefined' && token.userToken) {
-        localStorage.setItem('userToken', token.userToken);
+      if (typeof window !== 'undefined' && token.backendToken) {
+        localStorage.setItem('userToken', token.backendToken);
       }
       
       return session;
