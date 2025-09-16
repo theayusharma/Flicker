@@ -1,4 +1,4 @@
-FROM golang:1.25.1-alpine AS builder
+FROM golang:1.24.3-debain AS builder
 
 
 WORKDIR /app
@@ -16,7 +16,7 @@ COPY backendGo/ .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 
 
-FROM alpine:latest
+FROM debian:bullseye-slim
 
 
 RUN apk --no-cache add ca-certificates
