@@ -1,5 +1,6 @@
-FROM golang:1.24.3-debain AS builder
+FROM golang:1.25.1 AS builder
 
+ENV GOTOOLCHAIN=auto
 
 WORKDIR /app
 
@@ -16,10 +17,10 @@ COPY backendGo/ .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
 
 
+
+#RUN apk --no-cache add ca-certificates # for aplineeee
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 FROM debian:bullseye-slim
-
-
-RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
