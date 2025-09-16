@@ -14,16 +14,17 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("error loading .env file")
+
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using environment variables")
 	}
 
 	postgresURI := os.Getenv("POSTGRES_URI")
 	if postgresURI == "" {
-		log.Fatal("POSTGRES_URI is empty in .env")
+		log.Fatal("POSTGRES_URI environment variable is required")
 	}
 
+	var err error
 	DB, err = gorm.Open(postgres.Open(postgresURI), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
@@ -45,7 +46,6 @@ func InitDB() {
 	if err != nil {
 		log.Fatalf("failed to AutoMigrate: %v", err)
 	}
-
 	log.Println("connected to PostgreSQL successfully")
 }
 
