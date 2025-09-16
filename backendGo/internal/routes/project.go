@@ -3,13 +3,13 @@ package routes
 import (
 	"backendGo/internal/handler"
 	"backendGo/middleware"
-	"backendGo/pkg/database"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
-func ProjectRoutes(app *fiber.App) {
-	authMiddleware := middleware.NewAuthMiddleware(database.GetDB())
+func ProjectRoutes(app *fiber.App, db *gorm.DB) {
+	authMiddleware := middleware.NewAuthMiddleware(db)
 
 	project := app.Group("/projects")
 	project.Use(authMiddleware.RequireAuth)

@@ -3,13 +3,13 @@ package routes
 import (
 	"backendGo/internal/handler"
 	"backendGo/middleware"
-	"backendGo/pkg/database"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
-func SearchRoutes(c *fiber.App) {
-	authMiddleware := middleware.NewAuthMiddleware(database.GetDB())
+func SearchRoutes(c *fiber.App, db *gorm.DB) {
+	authMiddleware := middleware.NewAuthMiddleware(db)
 
 	app := c.Group("/search")
 	app.Use(authMiddleware.RequireAuth)
