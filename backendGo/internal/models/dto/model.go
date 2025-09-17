@@ -1,21 +1,16 @@
 package dto
 
-import "time"
-
-type Task struct{
-
-	ID          uint           `json:"ID"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	Title       string         `json:"Title"`
-	Description *string        `json:"Description"`
-	Status      *string        `json:"Status"`
-	Priority    *string        `json:"Priority"`
-	Tags        *string        `json:"Tags"`
-	StartDate *time.Time `json:"startDate"`
-	DueDate     *time.Time `json:"dueDate"`
-	Points      *uint   `json:"Points"`
-	ProjectID   uint           `json:"ProjectID"`
-	AuthorID    uint           `json:"AuthorID"`
-	AssigneeID  *uint          `json:"AssigneeID"`
+type Task struct {
+	ID          uint    `json:"id"`
+	Title       string  `json:"title" validate:"required"`
+	Description *string `json:"description"`
+	Status      *string `json:"status"`
+	Priority    *string `json:"priority"`
+	Tags        *string `json:"tags"`
+	StartDate   *string `json:"startdate"`
+	DueDate     *string `json:"duedate"`
+	Points      *uint   `json:"points"`
+	ProjectID   uint    `json:"projectid" validate:"required"`
+	AuthorID    uint    `json:"authorid"`
+	AssigneeID  *uint   `json:"assigneeid"`
 }

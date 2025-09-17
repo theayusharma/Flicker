@@ -4,10 +4,24 @@ import (
 	"backendGo/internal/models"
 	"backendGo/pkg/database"
 
-	// "strconv"
-
 	"github.com/gofiber/fiber/v2"
 )
+
+type SafeUserResponse struct {
+	UserID            uint   `json:"user_id"`
+	Username          string `json:"username"`
+	Email             string `json:"email,omitempty"`
+	GithubUsername    string `json:"github_username,omitempty"`
+	ProfilePictureURL string `json:"profile_picture_url,omitempty"`
+	TeamID            *uint  `json:"team_id,omitempty"`
+}
+
+func getStringValue(ptr *string) string {
+	if ptr == nil {
+		return ""
+	}
+	return *ptr
+}
 
 func GetUsers(c *fiber.Ctx) error {
 	// var users []models.User
@@ -30,5 +44,18 @@ func GetUsers(c *fiber.Ctx) error {
 			return c.Status(500).JSON(fiber.Map{"message": "error retrieving user: " + err.Error()})
 		}
 	}
-	return c.JSON(users)
+
+	safeUsers := make([]SafeUserResponse, len(users))
+	for i, u := range users {
+		safeUsers[i] = SafeUserResponse{
+			UserID:            u.UserID,
+			Username:          u.Username,
+			Email:             getStringValue(u.Email),
+			GithubUsername:    getStringValue(u.GithubUsername),
+			ProfilePictureURL: getStringValue(u.ProfilePictureURL),
+			TeamID:            u.TeamID,
+		}
+	}
+
+	return c.JSON(safeUsers)
 }

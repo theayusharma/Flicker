@@ -79,7 +79,7 @@ const Teams = () => {
         <DataGrid
           rows={displayTeams || []}
           columns={columns}
-          getRowId={(row) => row.teamid}
+          getRowId={(row) => row.id || row.teamid}
           pagination
           slots={{
             toolbar: CustomToolbar,

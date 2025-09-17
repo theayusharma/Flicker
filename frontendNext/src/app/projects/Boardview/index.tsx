@@ -176,17 +176,17 @@ const Task = ({ task }: TaskProps) => {
     }),
   }));
 
-  const taskTagsSplit = task.Tags ? task.Tags.split(",") : [];
-  const fStartDate = task.StartDate ? (() => {
+  const taskTagsSplit = task.tags ? task.tags.split(",") : [];
+  const fStartDate = task.startdate ? (() => {
     try {
-      const date = new Date(task.StartDate);
+      const date = new Date(task.startdate);
       return isNaN(date.getTime()) ? "" : format(date, "P");
     } catch (error) {
-      console.error("Error formatting StartDate:", task.StartDate, error);
+      console.error("Error formatting StartDate:", task.startdate, error);
       return "";
     }
-  })() : ""; // const fStartDate = task.StartDate ? format(new Date(task.StartDate), "P") : "";
-  const fDueDate = task.DueDate ? format(new Date(task.DueDate), "P") : "";
+  })() : "";
+  const fDueDate = task.duedate ? format(new Date(task.duedate), "P") : "";
   const noOfcomments = 0;
 
   const PriorityTag = ({ priority }: { priority: string | null }) => {
@@ -231,7 +231,7 @@ const Task = ({ task }: TaskProps) => {
       <div className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex flex-1 flex-wrap items-center gap-2">
-            {task.Priority && <PriorityTag priority={task.Priority} />}
+            {task.priority && <PriorityTag priority={task.priority} />}
             <div className="flex gap-2">
               {taskTagsSplit.map((tag: string) => (
                 <div key={tag} className="rounded-full bg-blue-100 px-2 py-1 text-xs dark:bg-blue-500">
@@ -243,25 +243,25 @@ const Task = ({ task }: TaskProps) => {
         </div>
 
         <div className="my-3 flex justify-between">
-          <h4 className="text-md font-bold dark:text-white">{task.Title}</h4>
+          <h4 className="text-md font-bold dark:text-white">{task.title}</h4>
         </div>
 
-        {task.Description && (
+        {task.description && (
           <div className="text-xs text-gray-500 dark:text-gray-300">
-            {task.Description}
+            {task.description}
           </div>
         )}
         {/*userssssss*/}
         <div className="mt-3 flex items-center justify-between">
           <div className="flex -space-x-[6px] overflow-hidden ">
-            {task.Assignee && (
+            {task.assignee && (
               <Image
-                key={task.Assignee.UserId}
-                src={`${task.Assignee.ProfilePictureURL}`}
-                alt={task.Assignee.Username}
+                key={task.assignee.UserId}
+                src={task.assignee.ProfilePictureURL || "/cat1.png"}
+                alt={task.assignee.Username || "User"}
                 width={30}
                 height={30}
-                className="sm:size-12 size-10 rounded-full border-2 border-white object-cover dark:border-dark-secondary w-full"
+                className="w-8 h-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"
               />
             )}
           </div>

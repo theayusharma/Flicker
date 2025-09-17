@@ -34,6 +34,13 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
     locale: "en-US"
   })
 
+  const handleViewModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setDisplayOp((prev) => ({
+      ...prev,
+      viewMode: event.target.value as ViewMode,
+    }))
+  }
+
   
 
   const ganttProjects = useMemo(() => {
@@ -98,12 +105,6 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
     )
   }
 
-  const handleViewModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDisplayOp((prev) => ({
-      ...prev,
-      viewMode: event.target.value as ViewMode,
-    }))
-  }
   return (
     <div className="max-w-full p-8">
       <header className="mb-4 flex itemes-center justify-between">

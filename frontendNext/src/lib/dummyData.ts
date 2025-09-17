@@ -37,7 +37,7 @@ export const dummyTasks: Task[] = [
     projectid: 1,
     authorid: 1,
     assigneeid: 2,
-    tags: "design,ui,cats,profiles,purr-sonality,adoption",
+    tags: "design,ui,cats,profiles",
     createdat: Date.now() - 86400000 * 5, 
     updatedat: Date.now() - 3600000 * 2, 
   },
@@ -53,7 +53,7 @@ export const dummyTasks: Task[] = [
     projectid: 1,
     authorid: 2,
     assigneeid: 3,
-    tags: "audio,frontend,ambiance,purr,soundscape,ux,relaxation",
+    tags: "audio,frontend,ambiance,purr",
     createdat: Date.now() - 86400000 * 3, 
     updatedat: Date.now() - 3600000 * 6, 
   },
@@ -69,7 +69,7 @@ export const dummyTasks: Task[] = [
     projectid: 2,
     authorid: 1,
     assigneeid: 1,
-    tags: "ai,machine-learning,computer-vision,whiskers,mood-analysis,cat-tech,zoomies",
+    tags: "ai,machine-learning,computer-vision",
     createdat: Date.now() - 86400000 * 8, // 8 days ago
     updatedat: Date.now() - 3600000 * 1, // 1 hour ago
   },
@@ -233,7 +233,7 @@ export const dummyTasksWithUsers: Task[] = [
     projectid: 1,
     authorid: 1,
     assigneeid: 2,
-    tags: "design,ui,cats,profiles,purr-sonality,adoption",
+    tags: "design,ui,cats,profiles",
     createdat: Date.now() - 86400000 * 5,
     updatedat: Date.now() - 3600000 * 2,
     author: {
@@ -309,7 +309,7 @@ export const dummyTasksWithUsers: Task[] = [
     projectid: 1,
     authorid: 2,
     assigneeid: 3,
-    tags: "audio,frontend,ambiance,purr,soundscape,ux,relaxation",
+    tags: "audio,frontend,ambiance,purr",
     createdat: Date.now() - 86400000 * 3,
     updatedat: Date.now() - 3600000 * 6,
     author: {
@@ -364,7 +364,7 @@ export const dummyTasksWithUsers: Task[] = [
     projectid: 2,
     authorid: 1,
     assigneeid: 1,
-    tags: "ai,machine-learning,computer-vision,whiskers,mood-analysis,cat-tech,zoomies",
+    tags: "ai,machine-learning,computer-vision",
     createdat: Date.now() - 86400000 * 8,
     updatedat: Date.now() - 3600000 * 1,
     author: {

@@ -36,8 +36,8 @@ const columns: GridColDef[] = [
       <div className="flex size-full items-center justify-center">
         <div className="size-10">
           <Image
-            src={params.row.ProfilePictureURL || "/cat1.png"}
-            alt={params.row.Username}
+            src={params.row.profile_picture_url || params.row.ProfilePictureURL || "/cat1.png"}
+            alt={params.row.username || params.row.Username || "User profile picture"}
             width={100}
             height={50}
             className="h-full rounded-full object-cover"
@@ -89,7 +89,7 @@ const Users = () => {
         <DataGrid
           rows={displayUsers || []}
           columns={columns}
-          getRowId={(row) => row.UserId}
+          getRowId={(row) => row.user_id || row.UserId}
           pagination
           slots={{
             toolbar: CustomToolbar,

@@ -7,6 +7,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type SafeSearchUserResponse struct {
+	UserID            uint   `json:"user_id"`
+	Username          string `json:"username"`
+	Email             string `json:"email,omitempty"`
+	GithubUsername    string `json:"github_username,omitempty"`
+	ProfilePictureURL string `json:"profile_picture_url,omitempty"`
+}
+
+func getStringPointerValue(ptr *string) string {
+	if ptr == nil {
+		return ""
+	}
+	return *ptr
+}
+
 func Search(c *fiber.Ctx) error {
 
 	var query = c.Query("query")
@@ -34,9 +49,21 @@ func Search(c *fiber.Ctx) error {
 			"error": err.Error(),
 		})
 	}
+
+	safeUsers := make([]SafeSearchUserResponse, len(user))
+	for i, u := range user {
+		safeUsers[i] = SafeSearchUserResponse{
+			UserID:            u.UserID,
+			Username:          u.Username,
+			Email:             getStringPointerValue(u.Email),
+			GithubUsername:    getStringPointerValue(u.GithubUsername),
+			ProfilePictureURL: getStringPointerValue(u.ProfilePictureURL),
+		}
+	}
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"task":    task,
 		"project": project,
-		"user":    user,
+		"user":    safeUsers,
 	})
 }

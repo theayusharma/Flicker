@@ -32,62 +32,64 @@ const Navbar = () => {
   }
 
   return (
-    <div className='flex items-center justify-between bg-white px-4 py-3 dark:bg-black w-auto '>
-      <div className='flex items-center gap-5'>
+    <div className='flex items-center justify-between bg-white px-2 sm:px-4 py-3 dark:bg-black w-auto '>
+      <div className='flex items-center gap-2 sm:gap-5'>
         {!isSiderbarCollapsed ? null : (
           <button onClick={() => dispatch(setIsSiderbarCollapsed(!isSiderbarCollapsed))}>
-            <Menu className='size-8 dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400' />
+            <Menu className='size-6 sm:size-8 dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400' />
           </button>
         )}
-        {/* <div className='relative flex flex-row h-min w-[200px]'> */}
         <Link href='/'>
-          <Image src="/logo.webp" alt="logo" width={50} height={50} className='rounded' />
+          <Image src="/logo.webp" alt="logo" width={40} height={40} className='sm:w-[50px] sm:h-[50px] rounded' />
         </Link>
         <Link href='/'>
-          <div className="text-xl font-bold text-gray-900 dark:text-white">
+          <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white hidden sm:block">
             Flicker
           </div>
         </Link>
         {/* </div> */}
       </div>
       {/* icons */}
-      <div className='flex gap-5 items-center'>
+      <div className='flex gap-2 sm:gap-5 items-center'>
         <ModalNewProject
           isOpen={isModalNewProjectOpen}
           onClose={() => setIsModalNewProjectOpen(false)}
         />
         <button
-          className="flex items-center px-3 py-2 rounded-md bg-emerald-500 text-white hover:bg-emerald-300"
+          className="flex items-center px-2 sm:px-3 py-2 rounded-md bg-emerald-500 text-white hover:bg-emerald-300"
           onClick={() => setIsModalNewProjectOpen(true)}
         >
-          <PlusSquare className="mr-2 size-5" /> New Board
+          <PlusSquare className="size-4 sm:size-5 sm:mr-2" /> 
+          <span className="hidden sm:block ml-1">
+            New Board
+          </span>
         </button>
         <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        // className={theme === "dark" ? `roudended p-2 ` : `rounded p-2 hover:bg-gray-100 `}
+          className="p-1 sm:p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           {theme === "dark" ? (
-            <Sun className='size-6 cursor-pointer dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400' />)
-            : (<Moon className='size-6 cursor-pointer dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400' />)
+            <Sun className='size-5 sm:size-6 cursor-pointer dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400' />)
+            : (<Moon className='size-5 sm:size-6 cursor-pointer dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400' />)
           }
         </button>
         <Link href="/settings"
-          className={theme === "dark" ? `size-min roudended p-2 ` : `size-min rounded p-2 hover:bg-gray-100`} >
-          <Settings className='size-6 cursor-pointer dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400'></Settings>
+          className="p-1 sm:p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800" >
+          <Settings className='size-5 sm:size-6 cursor-pointer dark:text-white hover:text-emerald-500 hover:dark:text-emerald-400'></Settings>
         </Link>
 
         {session ? (
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-3">
+            <div className="flex items-center gap-1 sm:gap-2">
               {session.user?.image ? (
                 <Image
                   src={session.user.image}
                   alt="Profile"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
+                  width={28}
+                  height={28}
+                  className="sm:w-8 sm:h-8 rounded-full"
                 />
               ) : (
-                <User className="size-8 p-1 rounded-full bg-emerald-500 text-white" />
+                <User className="size-6 sm:size-8 p-1 rounded-full bg-emerald-500 text-white" />
               )}
               <span className="hidden md:block text-sm font-medium dark:text-white">
                 {session.user?.name}
@@ -95,19 +97,20 @@ const Navbar = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="p-1 sm:p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               title="Sign out"
             >
-              <LogOut className="size-5 cursor-pointer dark:text-white hover:text-red-500 hover:dark:text-red-400" />
+              <LogOut className="size-4 sm:size-5 cursor-pointer dark:text-white hover:text-red-500 hover:dark:text-red-400" />
             </button>
           </div>
         ) : (
           <div className='flex'>
             <Link
               href="/login"
-              className="flex items-center px-3 py-2 rounded-md bg-emerald-500 text-white hover:bg-emerald-300"
+              className="flex items-center px-2 sm:px-3 py-2 rounded-md bg-emerald-500 text-white hover:bg-emerald-300 text-sm sm:text-base"
             >
-              Sign In
+              <span className="hidden sm:block">Sign In</span>
+              <User className="size-4 sm:hidden" />
             </Link>
           </div>
         )}

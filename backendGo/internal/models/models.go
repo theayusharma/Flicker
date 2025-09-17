@@ -15,8 +15,8 @@ type Team struct {
 	ProductOwnerUserID   *uint          `gorm:"index"`
 	ProjectManagerUserID *uint          `gorm:"index"` // Non-referentia
 
-	Users        []User        `gorm:"foreignKey:TeamID"`
-	ProjectTeams []ProjectTeam `gorm:"foreignKey:TeamID"`
+	Users        []User        `gorm:"foreignKey:TeamID" json:"-"`
+	ProjectTeams []ProjectTeam `gorm:"foreignKey:TeamID" json:"-"`
 }
 
 func (Team) TableName() string { return "teams" }
@@ -30,16 +30,16 @@ type User struct {
 	ProviderID        string         `gorm:"index"`
 	Email             *string        `gorm:"unique;index"`
 	Username          string         `gorm:"unique;not null"`
-	Password          *string        `gorm:"type:text"`
+	Password          *string        `gorm:"type:text" json:"-"`
 	GithubUsername    *string        `gorm:""`
 	ProfilePictureURL *string        `gorm:"type:text"`
 	TeamID            *uint          `gorm:"index"`
 
-	Team            *Team            `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:TeamID"`
-	AuthoredTasks   []Task           `gorm:"foreignKey:AuthorID;references:UserID"`
-	AssignedTasks   []Task           `gorm:"foreignKey:AssigneeID;references:UserID"`
-	TaskAssignments []TaskAssignment `gorm:"foreignKey:UserID"`
-	Attachments     []Attachment     `gorm:"foreignKey:UploadedByID"`
+	Team            *Team            `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:TeamID" json:"-"`
+	AuthoredTasks   []Task           `gorm:"foreignKey:AuthorID;references:UserID" json:"-"`
+	AssignedTasks   []Task           `gorm:"foreignKey:AssigneeID;references:UserID" json:"-"`
+	TaskAssignments []TaskAssignment `gorm:"foreignKey:UserID" json:"-"`
+	Attachments     []Attachment     `gorm:"foreignKey:UploadedByID" json:"-"`
 }
 
 func (User) TableName() string { return "users" }
@@ -54,8 +54,8 @@ type Project struct {
 	StartDate   *time.Time
 	EndDate     *time.Time
 
-	Tasks        []Task        `gorm:"foreignKey:ProjectID"`
-	ProjectTeams []ProjectTeam `gorm:"foreignKey:ProjectID"`
+	Tasks        []Task        `gorm:"foreignKey:ProjectID" json:"-"`
+	ProjectTeams []ProjectTeam `gorm:"foreignKey:ProjectID" json:"-"`
 }
 
 func (Project) TableName() string { return "projects" }
@@ -92,10 +92,10 @@ type Task struct {
 	AuthorID   uint  `gorm:"not null;index"`
 	AssigneeID *uint `gorm:"index"`
 
-	Project         Project          `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:ProjectID"`
-	Author          User             `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:AuthorID;references:UserID"`
-	Assignee        *User            `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:AssigneeID;references:UserID"`
-	TaskAssignments []TaskAssignment `gorm:"foreignKey:TaskID"`
+	Project         Project          `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;foreignKey:ProjectID" json:"-"`
+	Author          User             `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:AuthorID;references:UserID" json:"-"`
+	Assignee        *User            `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:AssigneeID;references:UserID" json:"-"`
+	TaskAssignments []TaskAssignment `gorm:"foreignKey:TaskID" json:"-"`
 	Attachments     []Attachment     `json:"attachments" gorm:"foreignKey:TaskID"`
 }
 

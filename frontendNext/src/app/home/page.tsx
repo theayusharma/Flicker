@@ -12,10 +12,12 @@ import { PlusSquare } from "lucide-react"
 import ModalNewProject from "../projects/ModalNewPro"
 import { dummyProjects, dummyTasksWithUsers } from "@/lib/dummyData"
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 const HomePage = () => {
   const [isModalNewProjectOpen, setIsModalNewProjectOpen] = useState(false)
   const { data: session, status } = useSession()
+  const router = useRouter()
 
   const { data: projects, isLoading: isProjectsLoading, error: projectsError } = useGetProjectsQuery()
 
@@ -133,34 +135,34 @@ const HomePage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {displayProjects.map((project) => (
             <div
-              key={project.ID}
+              key={project.ID || project.id}
               className="bg-white dark:bg-zinc-900 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => window.location.href = `/projects/${project.ID}`}
+              onClick={() => router.push(`/projects/${project.ID || project.id}`)}
             >
               <div className="flex items-start justify-between mb-3">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
-                  {project.Name}
+                  {project.Name || project.name}
                 </h3>
-                <span className={`px-2 py-1 text-xs rounded-full ${project.EndDate
+                <span className={`px-2 py-1 text-xs rounded-full ${(project.EndDate || project.endDate)
                   ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                   : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                   }`}>
-                  {project.EndDate ? 'Completed' : 'Active'}
+                  {(project.EndDate || project.endDate) ? 'Completed' : 'Active'}
                 </span>
               </div>
 
-              {project.Description && (
+              {(project.Description || project.description) && (
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                  {project.Description}
+                  {project.Description || project.description}
                 </p>
               )}
 
               <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                {project.StartDate && (
-                  <span>Started: {new Date(project.StartDate).toLocaleDateString()}</span>
+                {(project.StartDate || project.startDate) && (
+                  <span>Started: {new Date(project.StartDate || project.startDate).toLocaleDateString()}</span>
                 )}
-                {project.EndDate && (
-                  <span>Due: {new Date(project.EndDate).toLocaleDateString()}</span>
+                {(project.EndDate || project.endDate) && (
+                  <span>Due: {new Date(project.EndDate || project.endDate).toLocaleDateString()}</span>
                 )}
               </div>
             </div>
