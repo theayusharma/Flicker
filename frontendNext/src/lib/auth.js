@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
   providers: [
@@ -8,6 +9,48 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.username || !credentials?.password) {
+          return null;
+        }
+
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password,
+            }),
+          });
+
+          if (!response.ok) {
+            return null;
+          }
+
+          const userData = await response.json();
+          
+          return {
+            id: userData.id.toString(),
+            name: userData.username,
+            email: userData.email,
+            backendId: userData.id,
+            backendToken: userData.token,
+            role: userData.role,
+          };
+        } catch (error) {
+          return null;
+        }
+      }
+    })
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
@@ -51,13 +94,15 @@ export const authOptions = {
       session.user.backendId = token.backendId;
       session.user.backendToken = token.backendToken;
       session.user.role = token.role;
-      
-      if (typeof window !== 'undefined' && token.backendToken) {
-        localStorage.setItem('userToken', token.backendToken);
-      }
-      
       return session;
     },
+  },
+  events: {
+    async signIn({ user }) {
+      if (typeof window !== 'undefined' && user.backendToken) {
+        localStorage.setItem('userToken', user.backendToken);
+      }
+    }
   },
   pages: {
     signIn: '/login',

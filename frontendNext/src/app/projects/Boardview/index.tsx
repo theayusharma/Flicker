@@ -7,6 +7,8 @@ import { Task as TaskType } from "@/app/reduxstate/api"
 import { EllipsisVertical, MessageSquareMore, Plus } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
+import { dummyTasksWithUsers } from "@/lib/dummyData";
+import { useSession } from "next-auth/react";
 
 type BoardProps = {
   id: number;
@@ -24,6 +26,7 @@ const taskStatus = ["To Do", "Work In Progress", "Under Review", "Completed"];
 
 const Boardview = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
+  const { data: session, status } = useSession()
 
   const moveTask = (taskId: number, toStatus: string) => {
     const backendStatus = Object.keys(statusMapping).find(
@@ -35,8 +38,31 @@ const Boardview = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
 
   const { data: tasks, isLoading, error } = useGetTasksQuery({ projectId: Number(id) });
 
+  const isAuthenticated = status === "authenticated" && session
+  const hasRealTasks = tasks && tasks.length > 0
+
+  const displayTasks = isAuthenticated 
+    ? (hasRealTasks ? tasks : []) 
+    : dummyTasksWithUsers
+
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>An error occurred while fetching tasks: {JSON.stringify(error, null, 2)}</div>;
+  if (error && (!tasks || tasks.length === 0)) {
+    return (
+      <DndProvider backend={HTML5Backend}>
+        <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 xl:grid-cols-4">
+          {taskStatus.map((status) => (
+            <TaskColumn
+              key={status}
+              status={status}
+              tasks={displayTasks || []}
+              moveTask={moveTask}
+              setIsModalNewTaskOpen={setIsModalNewTaskOpen}
+            />
+          ))}
+        </div>
+      </DndProvider>
+    )
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -45,7 +71,7 @@ const Boardview = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
           <TaskColumn
             key={status}
             status={status}
-            tasks={tasks || []}
+            tasks={displayTasks || []}
             moveTask={moveTask}
             setIsModalNewTaskOpen={setIsModalNewTaskOpen}
           />

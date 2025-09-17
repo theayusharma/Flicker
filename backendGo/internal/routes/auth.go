@@ -13,4 +13,6 @@ func SetupAuthRoutes(app *fiber.App, db *gorm.DB) {
 	auth := app.Group("/api/auth")
 
 	auth.Post("/google", authHandler.GoogleAuth)
+	auth.Post("/signup", authHandler.Signup)
+	auth.Post("/login", authHandler.Login)
 }

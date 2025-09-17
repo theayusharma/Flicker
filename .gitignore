@@ -30,7 +30,9 @@
 
 # env files
 **/.env*
-
+main
+tmp/
+backendGo/tmp/main/
 # vercel
 **/.vercel
 **/testData/

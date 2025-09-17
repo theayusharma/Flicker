@@ -7,12 +7,21 @@ import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { setIsSiderbarCollapsed } from '@/app/reduxstate/index'
 import { useGetProjectsQuery } from '@/app/reduxstate/api';
+import { useSession } from "next-auth/react";
+import { dummyProjects } from '@/lib/dummyData';
+
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
-
-
+  const { data: session, status } = useSession()
 
   const { data: projects } = useGetProjectsQuery();
+
+  const isAuthenticated = status === "authenticated" && session
+  const hasRealProjects = projects && projects.length > 0
+
+  const displayProjects = isAuthenticated
+    ? (projects || [])
+    : dummyProjects
 
 
   const dispatch = useAppDispatch();
@@ -73,7 +82,7 @@ const Sidebar = () => {
 
         </button>
 
-        {showProjects && projects?.map((project) => (
+        {showProjects && displayProjects?.map((project) => (
           <Sidebarlink
             key={project.ID}
             icon={Briefcase}

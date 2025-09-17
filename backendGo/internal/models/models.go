@@ -1,8 +1,9 @@
 package models
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Team struct {
@@ -25,11 +26,12 @@ type User struct {
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
 	DeletedAt         gorm.DeletedAt `gorm:"index"`
-	Provider          string         `gorm:"not null;default:'github';index"`
-	ProviderID        string         `gorm:"unique;not null;index"`
+	Provider          string         `gorm:"not null;default:'local';index"`
+	ProviderID        string         `gorm:"index"`
 	Email             *string        `gorm:"unique;index"`
 	Username          string         `gorm:"unique;not null"`
-	GithubUsername    string         `gorm:"unique`
+	Password          *string        `gorm:"type:text"`
+	GithubUsername    *string        `gorm:""`
 	ProfilePictureURL *string        `gorm:"type:text"`
 	TeamID            *uint          `gorm:"index"`
 
@@ -73,7 +75,7 @@ type ProjectTeam struct {
 func (ProjectTeam) TableName() string { return "project_teams" }
 
 type Task struct {
-	ID          uint `gorm:"column:task_id;primaryKey;autoIncrement"json:"id"`
+	ID          uint `gorm:"column:task_id;primaryKey;autoIncrement" json:"id"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
@@ -86,7 +88,7 @@ type Task struct {
 	StartDate  *time.Time
 	DueDate    *time.Time
 	Points     *uint
-	ProjectID  uint  `gorm:"not null;index"json:"project_id"`
+	ProjectID  uint  `gorm:"not null;index" json:"project_id"`
 	AuthorID   uint  `gorm:"not null;index"`
 	AssigneeID *uint `gorm:"index"`
 

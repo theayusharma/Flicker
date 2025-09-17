@@ -26,7 +26,7 @@ func GetUsers(c *fiber.Ctx) error {
 	} else {
 		// If user has no team, only return the user themselves
 		userID := c.Locals("userID").(uint)
-		if err := database.DB.Debug().Where("id = ?", userID).Find(&users).Error; err != nil {
+		if err := database.DB.Debug().Where("user_id = ?", userID).Find(&users).Error; err != nil {
 			return c.Status(500).JSON(fiber.Map{"message": "error retrieving user: " + err.Error()})
 		}
 	}

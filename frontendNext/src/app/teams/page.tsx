@@ -7,6 +7,8 @@ import Header from "@/components/Header"
 import { collectMeta } from "next/dist/build/utils"
 import Image from "next/image"
 import { dataGridCN, dataGridSx } from "../lib/utils"
+import { dummyTeams } from "@/lib/dummyData"
+import { useSession } from "next-auth/react"
 
 const CustomToolbar = () => (
   <GridToolbarContainer className="toolbar flex gap-2">
@@ -36,21 +38,48 @@ const columns: GridColDef[] = [
   },
 ]
 const Teams = () => {
-
+  const { data: session, status } = useSession()
   const { data: team, isLoading, isError } = useGetTeamsQuery()
+
+  const isAuthenticated = status === "authenticated" && session
+  const hasRealTeams = team && team.length > 0
+
+  const displayTeams = isAuthenticated 
+    ? (hasRealTeams ? team : []) 
+    : dummyTeams
 
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode)
 
   if (isLoading) return <div>Loading...</div>
-  if (isError || !team) return <div>err fetching teams {isError}</div>
+  if (isError && (!team || team.length === 0)) {
+    return (
+      <div className="flex w-full flex-col p-8">
+        <Header name="Teams" />
+        <div style={{ height: 650, width: "100%" }}>
+          <DataGrid
+            rows={displayTeams || []}
+            columns={columns}
+            getRowId={(row) => row.teamid}
+            pagination
+            slots={{
+              toolbar: CustomToolbar,
+            }}
+            className={dataGridCN}
+            sx={dataGridSx(isDarkMode)}
+          />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex w-full flex-col p-8">
       <Header name="Teams" />
       <div style={{ height: 650, width: "100%" }}>
         <DataGrid
-          rows={team || []}
+          rows={displayTeams || []}
           columns={columns}
+          getRowId={(row) => row.teamid}
           pagination
           slots={{
             toolbar: CustomToolbar,

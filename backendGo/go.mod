@@ -7,6 +7,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.9
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/joho/godotenv v1.5.1
+	golang.org/x/crypto v0.41.0
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.30.1
 )
@@ -31,7 +32,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.65.0 // indirect
-	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect

@@ -24,14 +24,14 @@ func (m *AuthMiddleware) RequireAuth(c *fiber.Ctx) error {
 	authHeader := c.Get("Authorization")
 	if authHeader == "" {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Authorization header required",
+			"message": "Access denied to this project",
 		})
 	}
 
 	tokenParts := strings.Split(authHeader, " ")
 	if len(tokenParts) != 2 || tokenParts[0] != "Bearer" {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Invalid authorization format. Use: Bearer <token>",
+			"message": "Access denied to this project",
 		})
 	}
 
@@ -49,7 +49,7 @@ func (m *AuthMiddleware) RequireAuth(c *fiber.Ctx) error {
 			userID, err = m.parseJWTToken(tokenString)
 			if err != nil {
 				return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-					"error": "Invalid or expired token",
+					"message": "Access denied to this project",
 				})
 			}
 		}
@@ -58,7 +58,7 @@ func (m *AuthMiddleware) RequireAuth(c *fiber.Ctx) error {
 		userID, err = m.parseJWTToken(tokenString)
 		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": "Invalid or expired token",
+				"message": "Access denied to this project",
 			})
 		}
 	}
@@ -67,11 +67,11 @@ func (m *AuthMiddleware) RequireAuth(c *fiber.Ctx) error {
 	if err := m.DB.First(&user, userID).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": "User not found",
+				"message": "Access denied to this project",
 			})
 		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Database error",
+			"message": "Access denied to this project",
 		})
 	}
 
