@@ -38,7 +38,7 @@ jobs:
           creds: ${{secrets.AZURE_CREDS}}
       - name: restart web app so that it uses new one
         run: |
-          az containerapp update \
+          az containerapp revision restart \
             --name contflicker3 \
             --resource-group flicker_grp
      
