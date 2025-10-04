@@ -87,18 +87,28 @@ export const authOptions = {
       }
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.backendId = user.backendId;
         token.backendToken = user.backendToken;
         token.role = user.role;
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = user.image;
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.backendId = token.backendId;
-      session.user.backendToken = token.backendToken;
-      session.user.role = token.role;
+      if (token) {
+        session.user.id = token.id;
+        session.user.backendId = token.backendId;
+        session.user.backendToken = token.backendToken;
+        session.user.role = token.role;
+        session.user.email = token.email;
+        session.user.name = token.name;
+        session.user.image = token.picture;
+      }
       return session;
     },
     async redirect({ url, baseUrl }) {
@@ -107,24 +117,17 @@ export const authOptions = {
       return `${baseUrl}/home`;
     },
   },
-  events: {
-    async signIn({ user, account }) {
-      if (typeof window !== 'undefined' && user.backendToken) {
-        localStorage.setItem('userToken', user.backendToken);
-      }
-    },
-    async signOut() {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('userToken');
-      }
-    }
-  },
   pages: {
     signIn: '/login',
     error: '/auth/error',
   },
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

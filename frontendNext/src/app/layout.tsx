@@ -3,6 +3,7 @@ import "./globals.css";
 import DashboardWrap from "./dashboardWrap";
 import { ThemeProvider } from "@/components/theme-provider";
 import AuthProvider from "@/components/AuthProvider";
+import TokenHandler from "@/components/TokenHandler";
 
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <AuthProvider>
+          <TokenHandler />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

@@ -3,13 +3,15 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 export default function TokenHandler() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (session?.user?.backendToken) {
+    if (status === "authenticated" && session?.user?.backendToken) {
       localStorage.setItem('userToken', session.user.backendToken);
+    } else if (status === "unauthenticated") {
+      localStorage.removeItem('userToken');
     }
-  }, [session]);
+  }, [session, status]);
 
   return null;
 }
