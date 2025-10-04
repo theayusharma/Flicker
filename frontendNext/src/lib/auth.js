@@ -54,33 +54,38 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/auth/google`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: user.email,
-            name: user.name,
-            googleId: user.id,
-            image: user.image,
-          }),
-        });
+      if (account?.provider === "google") {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/auth/google`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.name,
+              googleId: user.id,
+              image: user.image,
+            }),
+          });
 
-        if (!response.ok) {
+          if (!response.ok) {
+            console.error('Google auth backend error:', response.status, await response.text());
+            return false;
+          }
+
+          const userData = await response.json();
+          user.backendId = userData.id;
+          user.backendToken = userData.token;
+          user.role = userData.role;
+
+          return true;
+        } catch (error) {
+          console.error('Google signIn error:', error);
           return false;
         }
-
-        const userData = await response.json();
-        user.backendId = userData.id;
-        user.backendToken = userData.token;
-        user.role = userData.role;
-
-        return true;
-      } catch (error) {
-        return false;
       }
+      return true;
     },
     async jwt({ token, user }) {
       if (user) {
@@ -96,11 +101,21 @@ export const authOptions = {
       session.user.role = token.role;
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return `${baseUrl}/home`;
+    },
   },
   events: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       if (typeof window !== 'undefined' && user.backendToken) {
         localStorage.setItem('userToken', user.backendToken);
+      }
+    },
+    async signOut() {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('userToken');
       }
     }
   },
