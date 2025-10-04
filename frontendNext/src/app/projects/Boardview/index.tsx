@@ -110,7 +110,8 @@ const TaskColumn = ({
 
   const filteredTasks = tasks.filter((task: any) => {
     const backendStatus = getBackendStatus(status);
-    return task.status === backendStatus;
+    const taskStatus = task.status || "todo"; // Default to "todo" if status is null
+    return taskStatus === backendStatus;
   });
 
   const taskCount = filteredTasks.length;
@@ -176,6 +177,7 @@ const Task = ({ task }: TaskProps) => {
     }),
   }));
 
+  // Handle both API response format and dummy data format
   const taskTagsSplit = task.tags ? task.tags.split(",") : [];
   const fStartDate = task.startdate ? (() => {
     try {
@@ -188,6 +190,16 @@ const Task = ({ task }: TaskProps) => {
   })() : "";
   const fDueDate = task.duedate ? format(new Date(task.duedate), "P") : "";
   const noOfcomments = 0;
+
+  // Handle priority (API returns "Medium", dummy data uses Priority enum)
+  const taskPriority = task.priority || "Medium";
+  
+  // Handle title and description
+  const taskTitle = task.title || "Untitled Task";
+  const taskDescription = task.description || "";
+  
+  // Handle assignee/author - API has author, dummy data has assignee
+  const userInfo = task.assignee || task.author;
 
   const PriorityTag = ({ priority }: { priority: string | null }) => {
     if (!priority) return null;
@@ -231,7 +243,7 @@ const Task = ({ task }: TaskProps) => {
       <div className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex flex-1 flex-wrap items-center gap-2">
-            {task.priority && <PriorityTag priority={task.priority} />}
+            {taskPriority && <PriorityTag priority={taskPriority} />}
             <div className="flex gap-2">
               {taskTagsSplit.map((tag: string) => (
                 <div key={tag} className="rounded-full bg-blue-100 px-2 py-1 text-xs dark:bg-blue-500">
@@ -243,22 +255,22 @@ const Task = ({ task }: TaskProps) => {
         </div>
 
         <div className="my-3 flex justify-between">
-          <h4 className="text-md font-bold dark:text-white">{task.title}</h4>
+          <h4 className="text-md font-bold dark:text-white">{taskTitle}</h4>
         </div>
 
-        {task.description && (
+        {taskDescription && (
           <div className="text-xs text-gray-500 dark:text-gray-300">
-            {task.description}
+            {taskDescription}
           </div>
         )}
         {/*userssssss*/}
         <div className="mt-3 flex items-center justify-between">
           <div className="flex -space-x-[6px] overflow-hidden ">
-            {task.assignee && (
+            {userInfo && (
               <Image
-                key={task.assignee.UserId}
-                src={task.assignee.ProfilePictureURL || "/cat1.png"}
-                alt={task.assignee.Username || "User"}
+                key={userInfo.UserId || userInfo.user_id}
+                src={userInfo.ProfilePictureURL || userInfo.profile_picture_url || "/cat1.png"}
+                alt={userInfo.Username || userInfo.username || "User"}
                 width={30}
                 height={30}
                 className="w-8 h-8 rounded-full border-2 border-white object-cover dark:border-dark-secondary"

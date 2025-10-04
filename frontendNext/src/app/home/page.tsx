@@ -76,10 +76,30 @@ const HomePage = () => {
   }))
 
   const taskCols: GridColDef[] = [
-    { field: "title", headerName: "Title", width: 200, valueGetter: (params) => params.row?.title || params.row?.Title || '' },
-    { field: "status", headerName: "Status", width: 150, valueGetter: (params) => params.row?.status || params.row?.Status || '' },
-    { field: "priority", headerName: "Priority", width: 150, valueGetter: (params) => params.row?.priority || params.row?.Priority || '' },
-    { field: "duedate", headerName: "Due Date", width: 150, valueGetter: (params) => params.row?.duedate || params.row?.DueDate || '' },
+    { 
+      field: "title", 
+      headerName: "Title", 
+      width: 200, 
+      valueGetter: (value, row) => row?.title || row?.Title || '' 
+    },
+    { 
+      field: "status", 
+      headerName: "Status", 
+      width: 150, 
+      valueGetter: (value, row) => row?.status || row?.status || '' 
+    },
+    { 
+      field: "priority", 
+      headerName: "Priority", 
+      width: 150, 
+      valueGetter: (value, row) => row?.priority || row?.Priority || '' 
+    },
+    { 
+      field: "duedate", 
+      headerName: "Due Date", 
+      width: 150, 
+      valueGetter: (value, row) => row?.duedate || row?.DueDate || '' 
+    },
   ];
 
   const Colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];

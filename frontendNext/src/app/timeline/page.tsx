@@ -30,8 +30,7 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
     : dummyProjects
 
   const [displayOp, setDisplayOp] = useState<DisplayOption>({
-    viewMode: ViewMode.Month,
-    locale: "en-US"
+    viewMode: ViewMode.Month
   })
 
   const handleViewModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

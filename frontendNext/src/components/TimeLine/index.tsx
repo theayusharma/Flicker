@@ -19,8 +19,7 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
   const { data: session, status } = useSession()
 
   const [displayOp, setDisplayOp] = useState<DisplayOption>({
-    viewMode: ViewMode.Month,
-    locale: "en-US"
+    viewMode: ViewMode.Month
   })
 
   const handleViewModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,15 +42,32 @@ const TimeLine = ({ id, setIsModalNewTaskOpen }: Props) => {
 
   const ganttTasks = useMemo(() => {
     return (
-      displayTasks?.map((task) => ({
-        start: new Date(task.startdate || task.StartDate as string),
-        end: new Date(task.duedate || task.DueDate as string),
-        name: task.title || task.Title,
-        id: task.id,
-        type: "task" as TaskTypeItems,
-        progress: task.points ? (task.points / 10) * 100 : 0,
-        isDisabled: false,
-      })) || []
+      displayTasks?.map((task) => {
+        // Helper function to create valid dates with fallbacks
+        const createValidDate = (dateValue: string | null | undefined, fallbackDays: number = 0) => {
+          if (!dateValue) {
+            return new Date(Date.now() + fallbackDays * 24 * 60 * 60 * 1000);
+          }
+          const date = new Date(dateValue);
+          return isNaN(date.getTime()) ? new Date(Date.now() + fallbackDays * 24 * 60 * 60 * 1000) : date;
+        };
+
+        const startDate = createValidDate(task.startdate || task.StartDate, 0);
+        const endDate = createValidDate(task.duedate || task.DueDate, 7); // Default to 7 days from now if no due date
+
+        // Ensure end date is after start date
+        const finalEndDate = endDate <= startDate ? new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000) : endDate;
+
+        return {
+          start: startDate,
+          end: finalEndDate,
+          name: task.title || task.Title || 'Untitled Task',
+          id: task.id,
+          type: "task" as TaskTypeItems,
+          progress: task.points ? Math.min((task.points / 10) * 100, 100) : 0,
+          isDisabled: false,
+        };
+      }) || []
     )
   }, [displayTasks])
 

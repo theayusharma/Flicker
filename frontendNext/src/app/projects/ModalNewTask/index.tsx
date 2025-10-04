@@ -31,7 +31,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
     const files = Array.from(e.target.files || [])
     if (files.length > 0) {
       setAttachments(prev => [...prev, ...files])
-      
+
       files.forEach(file => {
         if (file.type.startsWith('image/')) {
           const reader = new FileReader()
@@ -71,7 +71,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
 
     const fStartDate = StartDate ? formatISO(new Date(StartDate), { representation: 'complete' }) : ""
     const fDueDate = DueDate ? formatISO(new Date(DueDate), { representation: 'complete' }) : ""
-    
+
     try {
       await createTask({
         title: Title,
@@ -93,7 +93,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
       console.error('Failed to create task:', error)
     }
   }
-  
+
   const isFormValid = () => {
     return Title && Title.trim().length > 0;
   };
@@ -105,7 +105,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} name="Create New Task">
       <form
-        className="mt-4 space-y-6"
+        className="mt-6 mb-4 space-y-6"
         onSubmit={(e) => {
           e.preventDefault()
           handleSubmit()
@@ -115,12 +115,12 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           <label className={labelCss}>
             Task Title
           </label>
-          <input 
-            type="text" 
-            className={inputCss} 
-            placeholder="Enter task title" 
+          <input
+            type="text"
+            className={inputCss}
+            placeholder="Enter task title"
             value={Title}
-            onChange={(e) => setTitle(e.target.value)} 
+            onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
@@ -129,11 +129,11 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           <label className={labelCss}>
             Description
           </label>
-          <textarea 
-            className={`${inputCss} min-h-[100px]`} 
+          <textarea
+            className={`${inputCss} min-h-[100px]`}
             placeholder="Describe the task in detail..."
             value={Description}
-            onChange={(e) => setDescription(e.target.value)} 
+            onChange={(e) => setDescription(e.target.value)}
             rows={4}
           />
         </div>
@@ -141,9 +141,9 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCss}>Priority</label>
-            <select 
+            <select
               className={selectCss}
-              value={priority} 
+              value={priority}
               onChange={(e) => setPriority(Priority[e.target.value as keyof typeof Priority])}
             >
               <option value={Priority.urgent}>Urgent</option>
@@ -172,30 +172,30 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <label className={labelCss}>Start Date</label>
-            <input 
-              type="date" 
-              className={inputCss} 
+            <input
+              type="date"
+              className={inputCss}
               value={StartDate}
-              onChange={(e) => setStartDate(e.target.value)} 
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
-          
+
           <div>
             <label className={labelCss}>Due Date</label>
-            <input 
-              type="date" 
-              className={inputCss} 
+            <input
+              type="date"
+              className={inputCss}
               value={DueDate}
-              onChange={(e) => setDueDate(e.target.value)} 
+              onChange={(e) => setDueDate(e.target.value)}
             />
           </div>
 
           <div>
             <label className={labelCss}>Story Points</label>
-            <input 
-              type="number" 
-              className={inputCss} 
-              placeholder="1, 2, 3, 5, 8, 13..." 
+            <input
+              type="number"
+              className={inputCss}
+              placeholder="1, 2, 3, 5, 8, 13..."
               value={points}
               onChange={(e) => setPoints(e.target.value)}
               min="1"
@@ -208,35 +208,35 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           <label className={labelCss}>
             Tags
           </label>
-          <input 
-            type="text" 
-            className={inputCss} 
-            placeholder="frontend, bug-fix, ui, api (comma separated)" 
+          <input
+            type="text"
+            className={inputCss}
+            placeholder="frontend, bug-fix, ui, api (comma separated)"
             value={Tags}
-            onChange={(e) => setTags(e.target.value)} 
+            onChange={(e) => setTags(e.target.value)}
           />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCss}>Author User ID</label>
-            <input 
-              type="number" 
-              className={inputCss} 
-              placeholder="Enter author ID" 
+            <input
+              type="number"
+              className={inputCss}
+              placeholder="Enter author ID"
               value={AuthorUserId}
-              onChange={(e) => setAuthorUserId(e.target.value)} 
+              onChange={(e) => setAuthorUserId(e.target.value)}
             />
           </div>
 
           <div>
             <label className={labelCss}>Assigned User ID</label>
-            <input 
-              type="number" 
-              className={inputCss} 
-              placeholder="Enter assignee ID" 
+            <input
+              type="number"
+              className={inputCss}
+              placeholder="Enter assignee ID"
               value={AssignedUserId}
-              onChange={(e) => setAssignedUserId(e.target.value)} 
+              onChange={(e) => setAssignedUserId(e.target.value)}
             />
           </div>
         </div>
@@ -258,33 +258,33 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className={labelCss}>Start Date</label>
-            <input 
-              type="date" 
-              className={inputCss} 
+            <input
+              type="date"
+              className={inputCss}
               value={StartDate}
-              onChange={(e) => setStartDate(e.target.value)} 
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
 
           <div>
             <label className={labelCss}>Due Date</label>
-            <input 
-              type="date" 
-              className={inputCss} 
+            <input
+              type="date"
+              className={inputCss}
               value={DueDate}
-              onChange={(e) => setDueDate(e.target.value)} 
+              onChange={(e) => setDueDate(e.target.value)}
             />
           </div>
         </div>
 
         <div>
           <label className={labelCss}>Tags</label>
-          <input 
-            type="text" 
-            className={inputCss} 
-            placeholder="Comma-separated tags" 
+          <input
+            type="text"
+            className={inputCss}
+            placeholder="Comma-separated tags"
             value={Tags}
-            onChange={(e) => setTags(e.target.value)} 
+            onChange={(e) => setTags(e.target.value)}
           />
         </div>
 
@@ -300,11 +300,11 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
                   <span className="mt-2 block text-sm font-medium text-gray-900 dark:text-white">
                     Drop files here or click to upload
                   </span>
-                  <input 
-                    id="file-upload" 
-                    name="file-upload" 
-                    type="file" 
-                    className="sr-only" 
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    className="sr-only"
                     multiple
                     accept="image/*,.pdf,.doc,.docx,.txt"
                     onChange={handleFileUpload}
@@ -317,7 +317,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
             </div>
           </div>
 
-       
+
 
           {attachments.length > 0 && (
             <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -325,8 +325,8 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
                 <div key={index} className="relative group">
                   <div className="aspect-square rounded-lg border border-gray-200 dark:border-zinc-600 p-2 flex items-center justify-center bg-gray-50 dark:bg-zinc-800">
                     {attachmentPreviews[index] ? (
-                      <Image 
-                        src={attachmentPreviews[index]} 
+                      <Image
+                        src={attachmentPreviews[index]}
                         alt={file.name}
                         width={200}
                         height={200}
@@ -355,11 +355,10 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           )}
         </div>
 
-        <button 
+        <button
           type="submit"
-          className={`mt-6 flex w-full justify-center rounded-md border border-transparent bg-emerald-500 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors ${
-            !isFormValid() || isLoading ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`mt-8 mb-4 flex w-full justify-center rounded-md border border-transparent bg-emerald-500 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors ${!isFormValid() || isLoading ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={!isFormValid() || isLoading}
         >
           {isLoading ? "Creating Task..." : "Create Task"}
