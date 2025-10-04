@@ -1,0 +1,41 @@
+name: azure app docker hub image build,push
+
+# env:
+#   AZURE_WEBAPP_NAME: contflicker 
+
+on:
+  push:
+    branches: ["main"]
+    paths: 
+      - 'backendGo/**'
+
+permissions:
+  contents: read
+  packages: write 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name : build image
+        run:  docker build . -t theayusharma/flickergo:latest
+
+      - name: push image to docker hub
+        run : |
+          docker login -u theayusharma -p $({secrets.DOCKER_HUB_TOKEN})
+          docker push theayusharma/flickergo:latest
+  to_azure:
+    - name: login azure
+      uses: azure/login@v1
+      with:
+        creds: $({secrets.AZURE_CREDS})
+    - name: restart web app so that it uses new one
+      run: |
+        az containerapp update \
+          --name contflicker3 \
+          --resource-group flicker_grp
+   

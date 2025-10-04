@@ -35,7 +35,7 @@ func main() {
 				origin == "http://localhost:3000" ||
 				origin == "http://127.0.0.1:3000"
 		},
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS,PATCH",
 		AllowHeaders:     "Origin,Content-Type,Authorization,Accept",
 		AllowCredentials: true,
 	}))
