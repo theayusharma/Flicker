@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths: 
       - 'backendGo/**'
+      - '.github/workflows/**'
 
 permissions:
   contents: read
