@@ -40,3 +40,5 @@ backendGo/tmp/main/
 # typescript
 **/*.tsbuildinfo
 **/next-env.d.ts
+
+backendGo/tmp/*
