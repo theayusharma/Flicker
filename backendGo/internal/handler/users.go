@@ -23,6 +23,7 @@ func getStringValue(ptr *string) string {
 	return *ptr
 }
 
+
 func GetUsers(c *fiber.Ctx) error {
 	// var users []models.User
 	// if err := database.DB.Debug().Find(&users).Error; err != nil {
