@@ -26,7 +26,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: pushingggg
         run: docker push theayusharma/flickergo:latest
   # azure-restart:
   # #   runs-on: ubuntu-latest
